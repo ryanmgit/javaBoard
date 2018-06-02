@@ -1,0 +1,335 @@
+<html>
+<head>
+<script src="assets/canvasjs.min.js"></script>
+<style>
+div.container {
+	width: 1000px;
+	height: 1500px;
+	position: relative;
+	left: 1px;
+	background-image: url(assets/background2.png);
+	background-size:     contain;
+	background-repeat:   no-repeat;
+	background-position: top left;
+	font-family: "Arial", Arial, sans-serif;
+}
+
+div.exam3 {
+	position: absolute;
+	top: 441px;
+	left: 840px;
+	font-size: 9px;
+	color: #999;
+	
+}
+
+div.project {
+	position: absolute;
+	top: 476px;
+	left: 840px;
+	font-size: 9px;
+	color: #999;
+}
+
+div.wanted {
+	position: absolute;
+	top: 530px;
+	left: 640px;
+	border-style: solid;
+	border-width: 2px;
+	border-color: #8C8C8C;
+	border-radius: 8px;
+	padding: 4px;
+	background-color: rgba(255, 255, 255, 0.5)
+}
+
+div.allbuttons {
+	position: absolute;
+	top: 575px;
+	left: 340px;
+}
+input.butcalc {
+	width: 150px;
+	height: 50px;
+	font-size: 20px;
+	border-radius: 8px;
+	cursor: pointer;
+}
+input.butgraph {
+	width: 120px;
+	height: 50px;
+	font-size: 20px;
+	border-radius: 8px;
+	cursor: pointer;
+}
+input.butreval {
+	width: 150px;
+	height: 50px;
+	font-size: 20px;
+	border-radius: 8px;
+	cursor: pointer;
+}
+input.butcancel {
+	width: 120px;
+	height: 50px;
+	font-size: 20px;
+	border-radius: 8px;
+	cursor: pointer;
+}
+input[type=text] {
+	font-size: 15px;
+	text-align: right;
+}
+input[type=button] {
+	background-color: #BBBBBB;
+	-webkit-transition-duration: 0.4s;
+    	transition-duration: 0.4s;
+}
+input[type=button]:hover {
+	background-color: #FFFFFF;
+}
+#chartContainer {
+	position: absolute;
+	top: 635px;
+	left: 150px;
+	width: 800px;
+	height: 400px;
+	
+}
+
+</style>
+</head>
+<body>
+<div class="container" id="container1">
+<div class="exam3">
+<input type="text" size="4" name="txt1" id="txt1"> /100
+</div>
+<div class="project">
+<input type="text" size="4" name="txt2" id="txt2"> /100
+</div>
+<div class="wanted">
+Grade You Want: <input type="text" size="10" name="txt3" id="txt3"> %
+</div>
+<div class="allbuttons">
+<input type="button" class="butcalc" value="Calculate" onclick="calc()"></input>
+    <input type="button" class="butgraph" value="Graph" onclick="graph()"></input>
+    <input type="button" class="butreval" value="Reset Values" onclick="reval()"></input>
+    <input type="button" class="butcancel" value="Cancel" onclick="location.href='index.html' "></input>
+</div>
+<div id="chartContainer">
+</div>
+</div>
+<script>
+
+function calc() {
+var element = document.getElementById('chartContainer');
+	element.style.opacity = "0";
+	element.style.filter  = 'alpha(opacity=0)';
+var x = document.getElementById("txt1").value;
+var y = document.getElementById("txt2").value;
+var z = document.getElementById("txt3").value;
+if (x != "" && y != "") {
+var averageGrade = (9 * 100 + 26 * x + 12 * y + 09 * 86.3 + 22 * 93 + 22 * 95)/100;
+} else if (x != "") {
+var averageGrade = (9 * 100 + 26 * x + 9 * 86.3 + 22 * 93 + 22 * 95)/88;
+} else if (y != "") {
+var averageGrade = (9 * 100 + 12 * y + 9 * 86.3 + 22 * 93 + 22 * 95)/74;
+} else { var averageGrade = (9 * 100 + 9 * 86.3 + 22 * 93 + 22 * 95)/62;
+}
+if (x != "") {
+var neededAverage = (z - averageGrade * .88)/.12;
+} else if (y != "") {
+var neededAverage = (z - averageGrade * .74)/.26;
+} else {
+var neededAverage = (z - averageGrade * .62)/.38;
+}
+
+averageGrade = averageGrade.toFixed(2);
+neededAverage = neededAverage.toFixed(2);
+
+if (x != "" && y != "" && z) {
+	alert("Error: Please remove an input and try again")
+} else if (z == "") {
+	alert("The average grade of all entered assignments is " + averageGrade +"%");
+} else {
+	alert("You will need an average of " + neededAverage + "% on the remaining assignments.");
+}
+}
+
+function graph() {
+var element = document.getElementById('chartContainer');
+	element.style.opacity = "1";
+	element.style.filter  = 'alpha(opacity=1)';
+var x = document.getElementById("txt1").value;
+var y = document.getElementById("txt2").value;
+var z = document.getElementById("txt3").value;
+
+if (z != "") {
+	alert("Error: Grade You Want and Graphing functions cannot be used together")
+} 
+else if (x != "" && y != "") {
+	alert("Error: Please remove an input and try again")
+}
+else if (x != "") {
+	document.getElementById('txt1').scrollIntoView();
+	var chart = new CanvasJS.Chart("chartContainer",
+    {
+      title:{
+       text: "How Scores on Remaining Assignments Effect Total Grade"   
+     },
+     theme: "theme2",
+     animationEnabled: true,
+     axisX: {
+       title: "Grade Received on Remaining Assignments (%)",
+       minimum: -5,
+       maximum: 105,
+       interval: 10,
+      },
+     axisY: {
+       title: "Expected Overall Grade (%)",
+       minimum: 50,
+       maximum: 105,
+       interval: 10,
+       titleWrap: false,
+       titleFontSize: 18,
+      },
+     toolTip: {
+	content:"Grade on Remaining Assignments: {x}% <br/>Corresponding Overall Grade: {y}%", 
+      },
+     data: [
+     {        
+      type: "line",
+   
+      dataPoints: [        
+      { x: 0, y: 58.127 + .26 * x, markerSize: 10},
+      { x: 10 , y: 58.127 + .26 * x + 12 * .10, markerSize: 10  },
+      { x: 20 , y: 58.127 + .26 * x + 12 * .20, markerSize: 10 },
+      { x: 30 , y: 58.127 + .26 * x + 12 * .30, markerSize: 10 },
+      { x: 40 , y: 58.127 + .26 * x + 12 * .40, markerSize: 10 },
+      { x: 50 , y: 58.127 + .26 * x + 12 * .50, markerSize: 10 },
+      { x: 60 , y: 58.127 + .26 * x + 12 * .60, markerSize: 10 },
+      { x: 70 , y: 58.127 + .26 * x + 12 * .70, markerSize: 10 },
+      { x: 80 , y: 58.127 + .26 * x + 12 * .80, markerSize: 10 },
+      { x: 90 , y: 58.127 + .26 * x + 12 * .90, markerSize: 10 },
+      { x: 100 , y: 58.127 + .26 * x + 12 * 1.00, markerSize: 10 }
+      ]
+    }
+    ]
+  });
+
+chart.render();
+}
+else if (y != "") {
+	document.getElementById('txt1').scrollIntoView();
+	var chart = new CanvasJS.Chart("chartContainer",
+    {
+      title:{
+       text: "How Scores on Remaining Assignments Effect Total Grade"   
+     },
+     theme: "theme2",
+     animationEnabled: true,
+     axisX: {
+       title: "Grade Received on Remaining Assignments (%)",
+       minimum: -5,
+       maximum: 105,
+       interval: 10,
+      },
+     axisY: {
+       title: "Expected Overall Grade (%)",
+       minimum: 50,
+       maximum: 105,
+       interval: 10,
+       titleWrap: false,
+       titleFontSize: 18,
+      },
+     toolTip: {
+	content:"Grade on Remaining Assignments: {x}% <br/>Corresponding Overall Grade: {y}%", 
+      },
+     data: [
+     {        
+      type: "line",
+   
+      dataPoints: [        
+      { x: 0, y: 58.127 + .12 * y, markerSize: 10},
+      { x: 10 , y: 58.127 + .12 * y + 26 * .10, markerSize: 10  },
+      { x: 20 , y: 58.127 + .12 * y + 26 * .20, markerSize: 10 },
+      { x: 30 , y: 58.127 + .12 * y + 26 * .30, markerSize: 10 },
+      { x: 40 , y: 58.127 + .12 * y + 26 * .40, markerSize: 10 },
+      { x: 50 , y: 58.127 + .12 * y + 26 * .50, markerSize: 10 },
+      { x: 60 , y: 58.127 + .12 * y + 26 * .60, markerSize: 10 },
+      { x: 70 , y: 58.127 + .12 * y + 26 * .70, markerSize: 10 },
+      { x: 80 , y: 58.127 + .12 * y + 26 * .80, markerSize: 10 },
+      { x: 90 , y: 58.127 + .12 * y + 26 * .90, markerSize: 10 },
+      { x: 100 , y: 58.127 + .12 * y + 26 * 1.00, markerSize: 10 }
+      ]
+    }
+    ]
+  });
+
+chart.render();
+}
+else {
+	document.getElementById('txt1').scrollIntoView();
+	var chart = new CanvasJS.Chart("chartContainer",
+    {
+      title:{
+       text: "How Scores on Remaining Assignments Effect Total Grade"   
+     },
+     theme: "theme2",
+     animationEnabled: true,
+     axisX: {
+       title: "Grade Received on Remaining Assignments (%)",
+       minimum: -5,
+       maximum: 105,
+       interval: 10,
+      },
+     axisY: {
+       title: "Expected Overall Grade (%)",
+       minimum: 50,
+       maximum: 105,
+       interval: 10,
+       titleWrap: false,
+       titleFontSize: 18,
+      },
+     toolTip: {
+	content:"Grade on Remaining Assignments: {x}% <br/>Corresponding Overall Grade: {y}%", 
+      },
+     data: [
+     {        
+      type: "line",
+   
+      dataPoints: [        
+      { x: 0, y: 58.127, markerSize: 10},
+      { x: 10 , y: 58.127 + 38 * .10, markerSize: 10  },
+      { x: 20 , y: 58.127 + 38 * .20, markerSize: 10 },
+      { x: 30 , y: 58.127 + 38 * .30, markerSize: 10 },
+      { x: 40 , y: 58.127 + 38 * .40, markerSize: 10 },
+      { x: 50 , y: 58.127 + 38 * .50, markerSize: 10 },
+      { x: 60 , y: 58.127 + 38 * .60, markerSize: 10 },
+      { x: 70 , y: 58.127 + 38 * .70, markerSize: 10 },
+      { x: 80 , y: 58.127 + 38 * .80, markerSize: 10 },
+      { x: 90 , y: 58.127 + 38 * .90, markerSize: 10 },
+      { x: 100 , y: 58.127 + 38 * 1.00, markerSize: 10 }
+      ]
+    }
+    ]
+  });
+
+chart.render();
+}
+
+}
+
+
+function reval() {
+	document.getElementById('container1').scrollIntoView();
+	var element = document.getElementById('chartContainer');
+	element.style.opacity = "0";
+	element.style.filter  = 'alpha(opacity=0)';
+	document.getElementById("txt1").value = "";
+	document.getElementById("txt2").value = "";
+	document.getElementById("txt3").value = "";
+}
+</script>
+</body>
+</html>
